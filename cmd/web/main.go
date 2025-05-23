@@ -9,6 +9,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/go-playground/form/v4"
 	"github.com/joho/godotenv"
+	"github.com/ntiGideon/cvCraft/cmd/service"
 	"github.com/ntiGideon/cvCraft/ent"
 	"github.com/ntiGideon/cvCraft/internal/dbClient"
 	"html/template"
@@ -26,6 +27,7 @@ type application struct {
 	sessionManager     *scs.SessionManager
 	db                 *ent.Client
 	templateRepository dbClient.TemplateRepository
+	thumbnailService   service.ThumbnailService
 }
 
 func main() {
@@ -83,6 +85,7 @@ func main() {
 		db:                 db,
 		sessionManager:     sessionManager,
 		templateRepository: dbClient.TemplateRepository{Client: db},
+		thumbnailService:   service.ThumbnailService{UploadPath: "ui/static/img/"},
 	}
 
 	tlsConfig := &tls.Config{

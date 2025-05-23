@@ -87,6 +87,7 @@ func (app *application) createTemplate(w http.ResponseWriter, r *http.Request) {
 			},
 		},
 	}
+	dto.Config.Name = dto.Name
 
 	dto.CheckField(validator.NotBlank(dto.Name), "name", "This field is required")
 
@@ -96,6 +97,14 @@ func (app *application) createTemplate(w http.ResponseWriter, r *http.Request) {
 		app.render(w, r, http.StatusUnprocessableEntity, "template_form.gohtml", data)
 		return
 	}
+
+	thumbnailUrl, err := app.thumbnailService.GenerateFromConfig(&dto.Config)
+	if err != nil {
+		app.logger.Error("failed to generate thumbnail", "error", err)
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	dto.Thumbnail = thumbnailUrl
 
 	err = app.templateRepository.CreateTemplate(r.Context(), &dto)
 	if err != nil {

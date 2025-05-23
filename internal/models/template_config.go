@@ -7,6 +7,7 @@ type TemplateConfig struct {
 	FontSettings  FontSettings  `json:"font_settings"`
 	SectionOrder  []string      `json:"section_order"`
 	LayoutOptions LayoutOptions `json:"layout_options"`
+	Name          string
 }
 
 type ColorScheme struct {
@@ -35,6 +36,7 @@ type CreateTemplateConfigDto struct {
 	Name        string `form:"name"`
 	Description string `form:"description"`
 	Premium     bool   `form:"premium"`
+	Thumbnail   string `form:"thumbnail"`
 	Config      TemplateConfig
 
 	validator.Validator `form:"-"`

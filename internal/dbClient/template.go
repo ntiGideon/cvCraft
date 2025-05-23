@@ -16,6 +16,7 @@ func (r *TemplateRepository) CreateTemplate(ctx context.Context, dto *models.Cre
 		SetDescription(dto.Description).
 		SetPremium(dto.Premium).
 		SetConfig(&dto.Config).
+		SetThumbnailURL(dto.Thumbnail).
 		Save(ctx)
 	return err
 }

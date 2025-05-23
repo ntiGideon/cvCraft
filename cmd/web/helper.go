@@ -31,6 +31,8 @@ type templateData struct {
 
 	Templates ent.Templates
 	IsAdmin   bool
+	HasMore   bool
+	NextPage  int
 }
 
 func connectDb(connectionString string) (*ent.Client, error) {
