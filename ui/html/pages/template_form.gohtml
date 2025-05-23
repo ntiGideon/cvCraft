@@ -1,0 +1,65 @@
+{{define "title"}}Create a template for resume{{end}}
+
+{{define "description"}}Configure how you want the resume to look like{{end}}
+
+{{ define "main" }}
+<div class="container">
+    <h1 class="title">Create New Template</h1>
+
+    <form method="POST" action="/templates">
+        <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+
+        <div class="field">
+            <label class="label">Template Name</label>
+            <div class="control">
+                <input class="input" type="text" name="name" required>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Description</label>
+            <div class="control">
+                <textarea class="textarea" name="description"></textarea>
+            </div>
+        </div>
+
+        <div class="box">
+            <h2 class="subtitle">Color Scheme</h2>
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Primary Color</label>
+                        <div class="control">
+                            <input type="color" class="input" name="primary_color" value="#4a6cf7">
+                        </div>
+                    </div>
+                </div>
+                <!-- Add more color fields -->
+            </div>
+        </div>
+
+        <div class="box">
+            <h2 class="subtitle">Font Settings</h2>
+            <div class="field">
+                <label class="label">Header Font</label>
+                <div class="control">
+                    <div class="select">
+                        <select name="header_font">
+                            {{ range .FontOptions }}
+                            <option value="{{ . }}">{{ . }}</option>
+                            {{ end }}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- Add more font fields -->
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <button type="submit" class="button is-primary">Create Template</button>
+            </div>
+        </div>
+    </form>
+</div>
+{{ end }}
