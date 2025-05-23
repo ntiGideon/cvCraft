@@ -7,10 +7,6 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: Aladdin200*
-      POSTGRES_DB: cvbuilder
+      POSTGRES_DB: cvcraft
     ports:
       - "5435:5432"
-#  redis-bloom:
-#    image: "redis/redis-stack-server:latest"
-#    ports:
-#      - "6379:6379"

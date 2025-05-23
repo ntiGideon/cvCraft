@@ -3,63 +3,281 @@
 {{define "description"}}Configure how you want the resume to look like{{end}}
 
 {{ define "main" }}
-<div class="container">
-    <h1 class="title">Create New Template</h1>
+<div class="container mt-6" style="max-width: 800px; margin: 0 auto;">
+    <h1 class="title is-2 has-text-centered mb-6">Create New Resume Template</h1>
 
-    <form method="POST" action="/templates">
+    <form method="POST" action="/create-template" class="box">
         <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
-        <div class="field">
-            <label class="label">Template Name</label>
-            <div class="control">
-                <input class="input" type="text" name="name" required>
-            </div>
-        </div>
-
-        <div class="field">
-            <label class="label">Description</label>
-            <div class="control">
-                <textarea class="textarea" name="description"></textarea>
-            </div>
-        </div>
 
         <div class="box">
-            <h2 class="subtitle">Color Scheme</h2>
-            <div class="columns">
-                <div class="column">
+            <h2 class="subtitle is-4">Basic Information</h2>
+            <div class="field">
+
+                <label class="label">Template Name *</label>
+                <div class="control">
+                    <input class="input" type="text" name="name" placeholder="e.g., Professional Blue">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                    <textarea class="textarea" name="description" placeholder="Brief description of this template"></textarea>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="checkbox">
+                    <input type="checkbox" name="premium">
+                    Premium Template (only available to pro users)
+                </label>
+            </div>
+        </div>
+
+        <!-- Color Scheme Section -->
+        <div class="box">
+            <h2 class="subtitle is-4">Color Scheme</h2>
+            <div class="columns is-multiline">
+                <div class="column is-one-third">
                     <div class="field">
                         <label class="label">Primary Color</label>
                         <div class="control">
-                            <input type="color" class="input" name="primary_color" value="#4a6cf7">
+                            <div class="color-picker">
+                                <input type="color" name="primary_color" value="#4a6cf7">
+                                <span>#4a6cf7</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <!-- Add more color fields -->
-            </div>
-        </div>
-
-        <div class="box">
-            <h2 class="subtitle">Font Settings</h2>
-            <div class="field">
-                <label class="label">Header Font</label>
-                <div class="control">
-                    <div class="select">
-                        <select name="header_font">
-                            {{ range .FontOptions }}
-                            <option value="{{ . }}">{{ . }}</option>
-                            {{ end }}
-                        </select>
+                <div class="column is-one-third">
+                    <div class="field">
+                        <label class="label">Secondary Color</label>
+                        <div class="control">
+                            <div class="color-picker">
+                                <input type="color" name="secondary_color" value="#6c757d">
+                                <span>#6c757d</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-third">
+                    <div class="field">
+                        <label class="label">Background</label>
+                        <div class="control">
+                            <div class="color-picker">
+                                <input type="color" name="background_color" value="#ffffff">
+                                <span>#ffffff</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-third">
+                    <div class="field">
+                        <label class="label">Text Color</label>
+                        <div class="control">
+                            <div class="color-picker">
+                                <input type="color" name="text_color" value="#212529">
+                                <span>#212529</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-third">
+                    <div class="field">
+                        <label class="label">Accent Color</label>
+                        <div class="control">
+                            <div class="color-picker">
+                                <input type="color" name="accent_color" value="#fd7e14">
+                                <span>#fd7e14</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-third">
+                    <div class="field">
+                        <label class="label">Header Color</label>
+                        <div class="control">
+                            <div class="color-picker">
+                                <input type="color" name="header_color" value="#343a40">
+                                <span>#343a40</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- Add more font fields -->
         </div>
 
-        <div class="field">
+        <!-- Font Settings Section -->
+        <div class="box">
+            <h2 class="subtitle is-4">Font Settings</h2>
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Header Font</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select name="header_font">
+                                    {{ range .FontOptions }}
+                                    <option value="{{ . }}">{{ . }}</option>
+                                    {{ end }}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Body Font</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select name="body_font">
+                                    {{ range .FontOptions }}
+                                    <option value="{{ . }}" {{ if eq . "Open Sans" }}selected{{ end }}>{{ . }}</option>
+                                    {{ end }}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Font Size</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select name="font_size">
+                                    <option value="12px">Small (12px)</option>
+                                    <option value="14px" selected>Medium (14px)</option>
+                                    <option value="16px">Large (16px)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Line Height</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select name="line_height">
+                                    <option value="1.2">Compact (1.2)</option>
+                                    <option value="1.5" selected>Standard (1.5)</option>
+                                    <option value="1.8">Spacious (1.8)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Layout Options Section -->
+        <div class="box">
+            <h2 class="subtitle is-4">Layout Options</h2>
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Columns</label>
+                        <div class="control">
+                            <label class="radio">
+                                <input type="radio" name="columns" value="1" checked>
+                                Single Column
+                            </label>
+                            <label class="radio">
+                                <input type="radio" name="columns" value="2">
+                                Two Columns
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Section Spacing</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select name="section_spacing">
+                                    <option value="1rem">Compact</option>
+                                    <option value="1.5rem" selected>Standard</option>
+                                    <option value="2rem">Spacious</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Header Style</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select name="header_style">
+                                    <option value="underline">Underline</option>
+                                    <option value="border-left">Border Left</option>
+                                    <option value="solid">Solid Background</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="field is-grouped is-grouped-centered">
             <div class="control">
-                <button type="submit" class="button is-primary">Create Template</button>
+                <button type="submit" class="button is-primary is-medium">
+                    <span class="icon">
+                        <i class="fas fa-save"></i>
+                    </span>
+                    <span>Create Template</span>
+                </button>
+            </div>
+            <div class="control">
+                <a href="/" class="button is-light is-medium">Cancel</a>
             </div>
         </div>
     </form>
 </div>
+
+<style>
+    .color-picker {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .color-picker input[type="color"] {
+        width: 50px;
+        height: 30px;
+        padding: 2px;
+        border: 1px solid #dbdbdb;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .box {
+        margin-bottom: 2rem;
+    }
+
+    .subtitle {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .label {
+        font-weight: 600;
+    }
+</style>
+
+<script>
+    // Update color hex values when color picker changes
+    document.querySelectorAll('input[type="color"]').forEach(picker => {
+        const hexSpan = picker.nextElementSibling;
+
+        picker.addEventListener('input', function() {
+            hexSpan.textContent = this.value;
+        });
+    });
+</script>
 {{ end }}

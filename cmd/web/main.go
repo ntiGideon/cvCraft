@@ -10,7 +10,7 @@ import (
 	"github.com/go-playground/form/v4"
 	"github.com/joho/godotenv"
 	"github.com/ntiGideon/cvCraft/ent"
-	"github.com/ntiGideon/cvCraft/internal/models"
+	"github.com/ntiGideon/cvCraft/internal/dbClient"
 	"html/template"
 	"log"
 	"log/slog"
@@ -20,12 +20,12 @@ import (
 )
 
 type application struct {
-	logger         *slog.Logger
-	templateCache  map[string]*template.Template
-	formDecoder    *form.Decoder
-	sessionManager *scs.SessionManager
-	db             *ent.Client
-	templateClient *models.TemplatesModel
+	logger             *slog.Logger
+	templateCache      map[string]*template.Template
+	formDecoder        *form.Decoder
+	sessionManager     *scs.SessionManager
+	db                 *ent.Client
+	templateRepository dbClient.TemplateRepository
 }
 
 func main() {
@@ -77,12 +77,12 @@ func main() {
 	sessionManager.Store = postgresstore.New(dbDriver)
 
 	app := &application{
-		logger:         logger,
-		templateCache:  templateCache,
-		formDecoder:    formDecode,
-		db:             db,
-		sessionManager: sessionManager,
-		templateClient: &models.TemplatesModel{Db: db},
+		logger:             logger,
+		templateCache:      templateCache,
+		formDecoder:        formDecode,
+		db:                 db,
+		sessionManager:     sessionManager,
+		templateRepository: dbClient.TemplateRepository{Client: db},
 	}
 
 	tlsConfig := &tls.Config{

@@ -1,0 +1,261 @@
+{{define "title"}}Resume Templates{{end}}
+
+{{define "description"}}Choose from our professionally designed resume templates{{end}}
+
+{{ define "main" }}
+<div class="container mt-6" style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
+    <div class="has-text-centered mb-6">
+        <h1 class="title is-2">Professional Resume Templates</h1>
+        <p class="subtitle is-5">Select a template to start building your perfect resume</p>
+
+        <a href="/create-template" class="button is-primary is-outlined">
+            <span class="icon">
+                <i class="fas fa-plus"></i>
+            </span>
+            <span>Create New Template</span>
+        </a>
+    </div>
+
+    <!-- Template Filter -->
+    <div class="box mb-6">
+        <div class="field is-grouped is-grouped-multiline">
+            <div class="control">
+                <div class="select">
+                    <select id="filter-style">
+                        <option value="all">All Styles</option>
+                        <option value="classic">Classic</option>
+                        <option value="modern">Modern</option>
+                        <option value="creative">Creative</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control">
+                <div class="select">
+                    <select id="filter-category">
+                        <option value="all">All Categories</option>
+                        <option value="free">Free Templates</option>
+                        <option value="premium">Premium Templates</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control">
+                <div class="buttons has-addons">
+                    <button class="button is-light" id="view-grid">
+                        <span class="icon">
+                            <i class="fas fa-th"></i>
+                        </span>
+                    </button>
+                    <button class="button is-light" id="view-list">
+                        <span class="icon">
+                            <i class="fas fa-list"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates Grid -->
+    <div class="columns is-multiline" id="templates-container">
+        {{range .Templates}}
+        <div class="column is-one-third template-card"
+             data-style="{{.Style}}"
+             data-category="{{if .Premium}}premium{{else}}free{{end}}">
+            <div class="card">
+                <div class="card-image">
+                    <figure class="image is-4by3">
+                        <img src="{{if .ThumbnailURL}}{{.ThumbnailURL}}{{else}}/static/images/default-template.jpg{{end}}"
+                             alt="{{.Name}} Template"
+                             style="object-fit: cover;">
+                        {{if .Premium}}
+                        <div class="tag is-warning is-medium" style="position: absolute; top: 10px; right: 10px;">
+                            Premium
+                        </div>
+                        {{end}}
+                    </figure>
+                </div>
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                            <p class="title is-4">{{.Name}}</p>
+                            <p class="subtitle is-6">{{.Description}}</p>
+                        </div>
+                    </div>
+
+                    <div class="content">
+                        <div class="tags">
+                            <span class="tag is-light">{{.Style}}</span>
+                            <span class="tag is-light">{{.Config.LayoutOptions.Columns}}-column</span>
+                        </div>
+
+                        <div class="color-palette mt-3">
+                            {{$colors := .Config.ColorScheme}}
+                            <span class="color-dot" style="background-color: {{$colors.Primary}}" title="Primary: {{$colors.Primary}}"></span>
+                            <span class="color-dot" style="background-color: {{$colors.Secondary}}" title="Secondary: {{$colors.Secondary}}"></span>
+                            <span class="color-dot" style="background-color: {{$colors.Accent}}" title="Accent: {{$colors.Accent}}"></span>
+                            <span class="color-dot" style="background-color: {{$colors.Header}}" title="Header: {{$colors.Header}}"></span>
+                        </div>
+                    </div>
+
+                    <div class="buttons">
+                        <a href="/cv/new?template_id={{.ID}}" class="button is-primary is-fullwidth">
+                            <span class="icon">
+                                <i class="fas fa-magic"></i>
+                            </span>
+                            <span>Use This Template</span>
+                        </a>
+
+
+                        <a href="/templates/{{.ID}}/edit" class="button is-light is-fullwidth">
+                            <span class="icon">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                            <span>Edit</span>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{end}}
+    </div>
+
+    <!-- Empty State -->
+    {{if not .Templates}}
+    <div class="box has-text-centered">
+        <div class="content">
+            <span class="icon is-large" style="font-size: 3rem;">
+                <i class="fas fa-file-alt"></i>
+            </span>
+            <h3 class="title is-4">No templates available</h3>
+            <p>There are currently no resume templates to display.</p>
+            {{if .IsAdmin}}
+            <a href="/templates/new" class="button is-primary mt-3">
+                <span class="icon">
+                    <i class="fas fa-plus"></i>
+                </span>
+                <span>Create Your First Template</span>
+            </a>
+            {{end}}
+        </div>
+    </div>
+    {{end}}
+</div>
+
+<style>
+    .template-card {
+        transition: transform 0.3s ease;
+    }
+
+    .template-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .color-palette {
+        display: flex;
+        gap: 8px;
+    }
+
+    .color-dot {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: inline-block;
+        border: 1px solid #ddd;
+        cursor: help;
+    }
+
+    .card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-content {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .buttons {
+        margin-top: auto;
+    }
+
+    /* List view styles (hidden by default) */
+    .list-view .column {
+        flex: none;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .list-view .template-card {
+        margin-bottom: 1.5rem;
+    }
+
+    .list-view .card {
+        flex-direction: row;
+        min-height: 200px;
+    }
+
+    .list-view .card-image {
+        flex: 0 0 30%;
+        max-width: 30%;
+    }
+
+    .list-view .card-content {
+        flex: 1;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // View toggle functionality
+        const viewGridBtn = document.getElementById('view-grid');
+        const viewListBtn = document.getElementById('view-list');
+        const container = document.getElementById('templates-container');
+
+        viewGridBtn.addEventListener('click', function() {
+            container.classList.remove('list-view');
+            viewGridBtn.classList.remove('is-light');
+            viewGridBtn.classList.add('is-primary');
+            viewListBtn.classList.remove('is-primary');
+            viewListBtn.classList.add('is-light');
+        });
+
+        viewListBtn.addEventListener('click', function() {
+            container.classList.add('list-view');
+            viewListBtn.classList.remove('is-light');
+            viewListBtn.classList.add('is-primary');
+            viewGridBtn.classList.remove('is-primary');
+            viewGridBtn.classList.add('is-light');
+        });
+
+        // Filter functionality
+        const styleFilter = document.getElementById('filter-style');
+        const categoryFilter = document.getElementById('filter-category');
+        const templateCards = document.querySelectorAll('.template-card');
+
+        function filterTemplates() {
+            const styleValue = styleFilter.value;
+            const categoryValue = categoryFilter.value;
+
+            templateCards.forEach(card => {
+                const cardStyle = card.dataset.style;
+                const cardCategory = card.dataset.category;
+
+                const styleMatch = styleValue === 'all' || cardStyle === styleValue;
+                const categoryMatch = categoryValue === 'all' || cardCategory === categoryValue;
+
+                if (styleMatch && categoryMatch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        styleFilter.addEventListener('change', filterTemplates);
+        categoryFilter.addEventListener('change', filterTemplates);
+    });
+</script>
+{{ end }}

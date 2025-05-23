@@ -22,11 +22,15 @@ import (
 type templateData struct {
 	Form        any
 	Flash       string
+	Toast       map[string]interface{}
 	CV          ent.Resume
 	Config      models.TemplateConfig
 	CurrentYear int
 	CSRFToken   string
 	FontOptions any
+
+	Templates ent.Templates
+	IsAdmin   bool
 }
 
 func connectDb(connectionString string) (*ent.Client, error) {
@@ -55,6 +59,7 @@ func (app *application) newTemplate(r *http.Request) templateData {
 	return templateData{
 		CSRFToken:   nosurf.Token(r),
 		CurrentYear: time.Now().Year(),
+		Flash:       app.sessionManager.PopString(r.Context(), "flash"),
 	}
 }
 

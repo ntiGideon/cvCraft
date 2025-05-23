@@ -35,7 +35,7 @@ type CreateTemplateConfigDto struct {
 	Name        string `form:"name"`
 	Description string `form:"description"`
 	Premium     bool   `form:"premium"`
-	Config      *TemplateConfig
+	Config      TemplateConfig
 
 	validator.Validator `form:"-"`
 }
